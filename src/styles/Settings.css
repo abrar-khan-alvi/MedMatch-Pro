@@ -1,0 +1,364 @@
+.settings-container {
+    padding: 0;
+    max-width: 100%;
+}
+
+.settings-header {
+    background-color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    /* Lighter shadow */
+    margin-bottom: 1rem;
+    border: 1px solid #e9ecef;
+}
+
+.settings-page-title {
+    font-size: 1.25rem;
+    /* Slightly smaller to match compact look */
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 0.25rem;
+}
+
+.settings-page-subtitle {
+    color: #868e96;
+    font-size: 0.9rem;
+}
+
+.settings-layout {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+/* Sidebar Styling */
+.settings-sidebar {
+    width: 240px;
+    /* Slightly narrower */
+    background-color: white;
+    border-radius: 12px;
+    padding: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9ecef;
+    flex-shrink: 0;
+}
+
+.settings-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    /* Reduced padding */
+    color: #495057;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 0.125rem;
+    transition: all 0.2s;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+/* ... existing hover/active styles ... */
+.settings-nav-item:hover {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+.settings-nav-item.active {
+    background-color: #e7f5ff;
+    /* Blue tint active state */
+    color: #1971c2;
+    font-weight: 600;
+}
+
+.settings-nav-icon {
+    width: 18px;
+    height: 18px;
+    color: #adb5bd;
+}
+
+.settings-nav-item.active .settings-nav-icon {
+    color: #1971c2;
+}
+
+
+/* Main Content Styling */
+.settings-main {
+    flex: 1;
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9ecef;
+}
+
+.settings-section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 0.25rem;
+}
+
+.settings-section-subtitle {
+    color: #868e96;
+    font-size: 0.85rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.settings-form-group {
+    margin-bottom: 1rem;
+}
+
+.settings-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 500;
+    color: #343a40;
+    font-size: 0.85rem;
+}
+
+.settings-input {
+    width: 100%;
+    padding: 0.6rem 0.85rem;
+    /* Tighter input padding */
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #495057;
+    background-color: #f8f9fa;
+    transition: border-color 0.15s ease-in-out;
+}
+
+.settings-input:focus {
+    outline: none;
+    border-color: #4dabf7;
+    background-color: white;
+}
+
+.settings-actions {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 0;
+}
+
+/* Custom Select Styling */
+.select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.select-wrapper::after {
+    content: "";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 6px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='none' stroke='%23495057' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 1 4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    pointer-events: none;
+}
+
+.select-wrapper select.settings-input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 2.5rem;
+    cursor: pointer;
+    background-color: #f8f9fa;
+}
+
+/* Specific button override if needed, otherwise reuse component */
+/* Notification Toggle Styles */
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-info h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #343a40;
+}
+
+.notification-info p {
+    margin: 0.25rem 0 0;
+    font-size: 0.85rem;
+    color: #868e96;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e9ecef;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+input:checked+.slider {
+    background-color: #2c3e50;
+}
+
+input:checked+.slider:before {
+    transform: translateX(20px);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .settings-container {
+        padding: 0;
+    }
+
+    .settings-header {
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .settings-page-title {
+        font-size: 1.1rem;
+    }
+
+    .settings-page-subtitle {
+        font-size: 0.8rem;
+    }
+
+    /* Stack layout vertically */
+    .settings-layout {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    /* Sidebar becomes horizontal scrollable tab bar */
+    .settings-sidebar {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 0.25rem;
+        padding: 0.5rem;
+        scrollbar-width: none;
+    }
+
+    .settings-sidebar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .settings-nav-item {
+        flex-shrink: 0;
+        white-space: nowrap;
+        padding: 0.5rem 0.85rem;
+        font-size: 0.8rem;
+        margin-bottom: 0;
+        border-radius: 20px;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    .settings-nav-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Main content */
+    .settings-main {
+        padding: 1.25rem 1rem;
+        border-radius: 10px;
+    }
+
+    .settings-section-title {
+        font-size: 0.95rem;
+    }
+
+    .settings-section-subtitle {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .settings-label {
+        font-size: 0.8rem;
+    }
+
+    .settings-input {
+        padding: 0.55rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    /* Notification items — keep readable */
+    .notification-item {
+        padding: 0.75rem 0;
+        gap: 1rem;
+    }
+
+    .notification-info h4 {
+        font-size: 0.85rem;
+    }
+
+    .notification-info p {
+        font-size: 0.78rem;
+    }
+
+    .toggle-switch {
+        flex-shrink: 0;
+    }
+
+    /* Save button full width */
+    .save-changes-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .settings-actions {
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+}

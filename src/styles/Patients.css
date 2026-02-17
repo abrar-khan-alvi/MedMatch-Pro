@@ -1,0 +1,418 @@
+/* Patients Page Styles */
+.patients-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.upload-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 42px;
+    /* Match height of primary button if needed, assuming standard */
+}
+
+.add-patient-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.patients-table-container {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.patients-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.patients-table th {
+    text-align: left;
+    padding: 1rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #495057;
+    background-color: #ffffff;
+    /* White header background as per screenshot maybe? checked image, looks white/transparent */
+    border-bottom: 1px solid #e9ecef;
+}
+
+.patients-table td {
+    padding: 1rem 1.5rem;
+    font-size: 0.9rem;
+    color: #212529;
+    border-bottom: 1px solid #f1f3f5;
+    vertical-align: middle;
+}
+
+.patients-table tr:last-child td {
+    border-bottom: none;
+}
+
+.col-id {
+    color: #868e96;
+}
+
+.patient-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.patient-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.patient-name {
+    font-weight: 500;
+    color: #212529;
+}
+
+.patient-gender {
+    font-size: 0.8rem;
+    color: #868e96;
+}
+
+.col-diagnosis {
+    color: #495057;
+}
+
+.protocol-badge {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #495057;
+}
+
+.score-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 150px;
+}
+
+.score-bar {
+    flex: 1;
+    height: 6px;
+    background-color: #f1f3f5;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.score-fill {
+    height: 100%;
+    border-radius: 3px;
+}
+
+.score-text {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #495057;
+    min-width: 32px;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-eligible {
+    background-color: #fff9db;
+    /* Lighten yellow slightly or custom eligible green if needed? Screenshot shows 'Eligible' as yellow-ish similar to score? No 'Eligible' is actually light yellow/beige bg with dark text */
+    /* Wait, looking closely:
+       - Eligible: Light yellow bg, dark text.
+       - Partially Eligible: Light grey? No.
+       Let's tune based on common practices if exact colors are hard to guess.
+       Screenshot:
+       - Eligible: Light beige/yellow bg.
+       - Partially Eligible: Light grey bg.
+       - Not Eligible: Light red bg.
+       - Pending: Light grey bg.
+    */
+    background-color: #fff9db;
+    color: #e67700;
+    /* Darker yellow/orange */
+    /* Actually screenshot Eligible looks very light, maybe off-white */
+    /* Let's try to match: */
+    background-color: #fff8e1;
+    /* Amber 50 */
+    color: #8d6e63;
+    /* Brownish */
+    /* Wait score bar for eligible is yellow. */
+}
+
+/* Re-evaluating colors from screenshot */
+/* Eligible: Light yellow-ish bg, dark text */
+/* Partially Eligible: Light grey bg, dark text */
+/* Not Eligible: Light red bg, red text */
+
+.status-eligible {
+    background-color: #fffae6;
+    /* Pale yellow */
+    color: #b78a06;
+    /* Dark yellow/gold */
+}
+
+.status-partial {
+    background-color: #f1f3f5;
+    color: #495057;
+}
+
+.status-not-eligible {
+    background-color: #fff5f5;
+    color: #e03131;
+}
+
+.status-pending {
+    background-color: #f8f9fa;
+    color: #868e96;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: #adb5bd;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.action-btn:hover {
+    color: #495057;
+}
+
+/* Pagination */
+.pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    margin-top: 0.5rem;
+}
+
+.pagination-info {
+    font-size: 0.85rem;
+    color: #868e96;
+    margin: 0;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.pagination-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #495057;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled):not(.active) {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+.pagination-btn.active {
+    background-color: #2c3e50;
+    border-color: #2c3e50;
+    color: #ffffff;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pagination-nav {
+    color: #868e96;
+}
+
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .patients-container {
+        height: auto;
+        padding-bottom: 2rem;
+    }
+
+    .patients-header-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .upload-btn,
+    .add-patient-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Card-based table layout */
+    .patients-table-container {
+        overflow: hidden;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .patients-table,
+    .patients-table thead,
+    .patients-table tbody,
+    .patients-table tr,
+    .patients-table th,
+    .patients-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .patients-table thead {
+        display: none;
+    }
+
+    .patients-table tr {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        position: relative;
+    }
+
+    .patients-table td {
+        padding: 0.35rem 0;
+        border-bottom: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .patients-table td::before {
+        content: attr(data-label);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #868e96;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        min-width: 72px;
+        flex-shrink: 0;
+    }
+
+    /* Patient info cell — full width, no label */
+    .patients-table td[data-label="Patient"] {
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.35rem;
+        border-bottom: 1px solid #f1f3f5;
+    }
+
+    .patients-table td[data-label="Patient"]::before {
+        display: none;
+    }
+
+    .patient-info {
+        gap: 0.75rem;
+        width: 100%;
+    }
+
+    .patient-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    /* ID cell — no label, rendered as subtle chip */
+    .patients-table td[data-label="ID"]::before {
+        display: none;
+    }
+
+    .patients-table td[data-label="ID"] {
+        position: absolute;
+        top: 1rem;
+        right: 1.25rem;
+        width: auto;
+        padding: 0;
+    }
+
+    .patients-table td[data-label="ID"] .col-id,
+    .patients-table td.col-id {
+        font-size: 0.75rem;
+        color: #adb5bd;
+    }
+
+    /* Score container adjustments */
+    .score-container {
+        width: auto;
+        flex: 1;
+    }
+
+    /* Action button — position top right */
+    .patients-table td[data-label=""] {
+        position: absolute;
+        top: 0.5rem;
+        right: 3.75rem;
+        width: auto;
+        padding: 0;
+    }
+
+    .patients-table td[data-label=""]::before {
+        display: none;
+    }
+
+    /* Status cell — no label, full width flex-end */
+    .patients-table td[data-label="Status"] {
+        justify-content: flex-start;
+        padding-top: 0.5rem;
+        margin-top: 0.25rem;
+        border-top: 1px solid #f1f3f5;
+    }
+
+    /* Pagination mobile */
+    .pagination-container {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    .pagination-info {
+        order: 2;
+    }
+
+    .pagination-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+    }
+}
