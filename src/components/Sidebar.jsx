@@ -33,10 +33,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     <Users className="nav-icon" />
                     Patients
                 </NavLink>
-                <NavLink to="/settings" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-                    <Settings className="nav-icon" />
-                    Settings
-                </NavLink>
+
 
                 {user && user.role === 'admin' && (
                     <NavLink to="/users" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
@@ -44,6 +41,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                         User Management
                     </NavLink>
                 )}
+
+                <NavLink to="/settings" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <Settings className="nav-icon" />
+                    Settings
+                </NavLink>
             </nav>
 
             <div className="sidebar-section-title">Aggregated Intelligence</div>
