@@ -67,7 +67,7 @@ const UserManagement = () => {
                             <tbody>
                                 {filteredUsers.map((u) => (
                                     <tr key={u.id}>
-                                        <td>
+                                        <td data-label="User">
                                             <div className="user-cell">
                                                 <img src={u.avatar} alt={u.name} className="user-avatar" />
                                                 <div>
@@ -76,17 +76,17 @@ const UserManagement = () => {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td data-label="Role">
                                             <span className={`role-badge ${u.role}`}>
                                                 {u.role === 'admin' ? <ShieldCheck size={14} /> : <Shield size={14} />}
                                                 {u.role.charAt(0).toUpperCase() + u.role.slice(1)}
                                             </span>
                                         </td>
-                                        <td>{u.department}</td>
-                                        <td>
+                                        <td data-label="Department">{u.department}</td>
+                                        <td data-label="Status">
                                             <span className="status-badge active">Active</span>
                                         </td>
-                                        <td>
+                                        <td data-label="">
                                             <button className="action-btn">
                                                 <MoreVertical size={18} />
                                             </button>

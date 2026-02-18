@@ -180,3 +180,133 @@
     background-color: #f1f3f5;
     color: #495057;
 }
+
+/* User Management Mobile Responsiveness - Card View */
+@media (max-width: 768px) {
+    .user-management-container {
+        padding: 1rem;
+        height: auto;
+        padding-bottom: 2rem;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .create-user-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .content-card {
+        padding: 0;
+        overflow: hidden;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    .table-controls {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem 0;
+        background: transparent;
+    }
+
+    .search-wrapper {
+        width: 100%;
+    }
+
+    /* Card-based table layout */
+    .table-responsive {
+        width: 100%;
+        overflow: visible;
+    }
+
+    .users-table,
+    .users-table thead,
+    .users-table tbody,
+    .users-table tr,
+    .users-table th,
+    .users-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .users-table thead {
+        display: none;
+    }
+
+    .users-table tr {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        position: relative;
+    }
+
+    .users-table td {
+        padding: 0.35rem 0;
+        border-bottom: none;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        /* Changed from space-between to flex-start for left alignment */
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .users-table td::before {
+        content: attr(data-label);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #868e96;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        text-align: left;
+        min-width: 100px;
+        /* Fixed width for alignment */
+        flex-shrink: 0;
+    }
+
+    /* User info cell — full width, no label */
+    .users-table td[data-label="User"] {
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.35rem;
+        border-bottom: 1px solid #f1f3f5;
+        justify-content: flex-start;
+    }
+
+    .users-table td[data-label="User"]::before {
+        display: none;
+    }
+
+    .user-cell {
+        width: 100%;
+    }
+
+    /* Action button — absolute position top right */
+    .users-table td[data-label=""] {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: auto;
+        padding: 0;
+        justify-content: flex-end;
+    }
+
+    .users-table td[data-label=""]::before {
+        display: none;
+    }
+
+    /* Adjust badges alignment */
+    .role-badge,
+    .status-badge {
+        margin-left: 0;
+    }
+}
