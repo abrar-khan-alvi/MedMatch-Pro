@@ -109,7 +109,7 @@ const AIMatching = () => {
                     </div>
                     <button className="run-match-btn" onClick={() => setIsModalOpen(true)}>
                         <Sparkles size={18} />
-                        Run Analysis
+                        Rematch
                     </button>
                 </div>
 

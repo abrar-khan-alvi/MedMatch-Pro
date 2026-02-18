@@ -324,8 +324,16 @@
 }
 
 .criteria-card.met {
-    border-left: 4px solid #fbc02d;
-    /* Yellow accent if pending/met? Screenshot uses yellow for active */
+    border-left: 4px solid #2b8a3e;
+    /* Green for met */
+    background-color: #f8f9fa;
+    /* Slight bg distinction */
+}
+
+.criteria-card.unmet {
+    border-left: 4px solid #fa5252;
+    /* Red for unmet */
+    background-color: #fff5f5;
 }
 
 /* Wait, looking at design: 

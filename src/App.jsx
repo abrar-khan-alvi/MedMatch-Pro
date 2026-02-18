@@ -15,6 +15,7 @@ import Settings from './pages/Settings';
 import AIMatching from './pages/AIMatching';
 import PatientDetails from './pages/PatientDetails';
 import UserManagement from './pages/UserManagement';
+import AllMatches from './pages/AllMatches';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/ai-matching" element={<AIMatching />} />
           <Route path="/users" element={<UserManagement />} />
+          <Route path="/all-matches" element={<AllMatches />} />
         </Routes>
       </AuthProvider>
     </Router>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../layouts/DashboardLayout';
+import { Link } from 'react-router-dom';
 import StatCard from '../components/StatCard';
 import { Users, UserCheck, AlertCircle, XCircle, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import '../styles/Dashboard.css';
@@ -82,9 +83,9 @@ const Dashboard = () => {
                             <h3>Recent Patient Matches</h3>
                             <p className="section-subtitle">Latest AI matching results</p>
                         </div>
-                        <a href="#" className="view-all-link">
+                        <Link to="/all-matches" className="view-all-link" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                             View all <ArrowRight size={16} />
-                        </a>
+                        </Link>
                     </div>
 
                     <table className="matches-table">

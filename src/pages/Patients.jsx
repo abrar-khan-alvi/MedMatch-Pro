@@ -216,9 +216,9 @@ const Patients = () => {
     };
 
     const getScoreColor = (score) => {
-        if (score >= 90) return '#fbc02d'; // Yellow/Gold
-        if (score >= 50) return '#fbc02d';
-        return '#e9ecef';
+        if (score >= 80) return '#2b8a3e'; // Green for high match
+        if (score >= 50) return '#fbc02d'; // Yellow for partial
+        return '#fa5252'; // Red for low
     };
 
     const toggleDropdown = (id, e) => {
