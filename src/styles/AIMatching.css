@@ -156,6 +156,8 @@
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 600;
+    white-space: nowrap;
+    display: inline-block;
 }
 
 .badge-eligible {
@@ -984,4 +986,108 @@
     padding: 1.5rem 2rem;
     background: white;
     border-top: 1px solid #e9ecef;
+}
+
+/* Inclusion / Exclusion List Styles in Report */
+.inclusion-exclusion-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.criteria-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.criteria-item {
+    font-size: 0.85rem;
+    color: #495057;
+    line-height: 1.4;
+}
+
+.criteria-label {
+    font-weight: 600;
+    color: #343a40;
+    margin-right: 0.25rem;
+}
+
+/* Mobile Responsive Adjustments for Report */
+@media (max-width: 768px) {
+    .report-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1.25rem;
+    }
+
+    .report-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .report-meta .meta-tag {
+        margin-right: 0 !important;
+        /* Override inline style margin */
+        font-size: 0.75rem !important;
+    }
+
+    .report-summary-grid {
+        grid-template-columns: 1fr 1fr;
+        /* Force 2 columns on mobile */
+        gap: 1rem;
+    }
+
+    .summary-card {
+        padding: 1rem;
+    }
+
+    .summary-value {
+        font-size: 1.75rem;
+    }
+
+    .summary-label {
+        font-size: 0.8rem;
+    }
+
+    .distribution-chart {
+        height: 32px;
+    }
+
+    .chart-segment {
+        font-size: 0.7rem !important;
+        padding: 0 4px;
+    }
+
+    .chart-legend {
+        gap: 1rem;
+    }
+
+    .modal-footer {
+        flex-direction: column-reverse;
+        /* Stack buttons, Primary on top */
+        gap: 0.75rem;
+    }
+
+    .modal-footer button {
+        width: 100%;
+        margin-left: 0 !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-segment {
+        /* Hide text on very small screens if it doesn't fit */
+        color: transparent !important;
+        position: relative;
+    }
+
+    /* Optional: Show icon or color only */
+    .report-summary-grid {
+        grid-template-columns: 1fr;
+        /* 1 column for very small phones */
+    }
 }

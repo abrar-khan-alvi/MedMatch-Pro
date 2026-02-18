@@ -3,7 +3,10 @@ import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, FileText, Users, Settings, Sparkles, X } from 'lucide-react';
 import SmallLogo from '../assets/SmallLogo.png';
 
+import { useAuth } from '../context/AuthContext';
+
 const Sidebar = ({ isOpen, toggleSidebar }) => {
+    const { user } = useAuth();
     return (
         <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
             <button className="sidebar-close-btn" onClick={toggleSidebar}>
@@ -19,10 +22,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     <LayoutDashboard className="nav-icon" />
                     Dashboard
                 </NavLink>
-                <NavLink to="/protocol" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-                    <FileText className="nav-icon" />
-                    Protocol
-                </NavLink>
+
+                {user && user.role === 'admin' && (
+                    <NavLink to="/protocol" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                        <FileText className="nav-icon" />
+                        Protocol
+                    </NavLink>
+                )}
                 <NavLink to="/patients" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <Users className="nav-icon" />
                     Patients
@@ -31,6 +37,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     <Settings className="nav-icon" />
                     Settings
                 </NavLink>
+
+                {user && user.role === 'admin' && (
+                    <NavLink to="/users" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                        <Users className="nav-icon" />
+                        User Management
+                    </NavLink>
+                )}
             </nav>
 
             <div className="sidebar-section-title">Aggregated Intelligence</div>

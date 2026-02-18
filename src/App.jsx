@@ -14,6 +14,7 @@ import Patients from './pages/Patients';
 import Settings from './pages/Settings';
 import AIMatching from './pages/AIMatching';
 import PatientDetails from './pages/PatientDetails';
+import UserManagement from './pages/UserManagement';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/patients/:id" element={<PatientDetails />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/ai-matching" element={<AIMatching />} />
+          <Route path="/users" element={<UserManagement />} />
         </Routes>
       </AuthProvider>
     </Router>

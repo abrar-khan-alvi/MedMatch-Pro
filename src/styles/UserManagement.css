@@ -1,0 +1,182 @@
+.user-management-container {
+    padding: 2rem;
+    height: 100%;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+    color: #868e96;
+    font-size: 0.95rem;
+}
+
+.create-user-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.create-user-btn:hover {
+    background-color: #1a252f;
+}
+
+.content-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f3f5;
+    padding: 1.5rem;
+}
+
+.table-controls {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.search-wrapper {
+    position: relative;
+    width: 300px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.users-table th {
+    text-align: left;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f1f3f5;
+    color: #495057;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.users-table td {
+    padding: 1rem 0;
+    border-bottom: 1px solid #f1f3f5;
+    vertical-align: middle;
+}
+
+.users-table tr:last-child td {
+    border-bottom: none;
+}
+
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #e9ecef;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #343a40;
+    font-size: 0.95rem;
+}
+
+.user-email {
+    font-size: 0.85rem;
+    color: #868e96;
+}
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.role-badge.admin {
+    background-color: #fff0f6;
+    color: #c02a5c;
+    border: 1px solid #fcc2d7;
+}
+
+.role-badge.user {
+    background-color: #e7f5ff;
+    color: #1971c2;
+    border: 1px solid #a5d8ff;
+}
+
+.status-badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background-color: #f4f7f2;
+    color: #558b2f;
+    border: 1px solid #dcedc8;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: #adb5bd;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.action-btn:hover {
+    background-color: #f1f3f5;
+    color: #495057;
+}

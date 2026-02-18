@@ -5,8 +5,22 @@ import Button from '../components/Button';
 import CreateProtocolModal from '../components/CreateProtocolModal';
 import '../styles/Protocol.css';
 
+import { useAuth } from '../context/AuthContext';
+import { Navigate } from 'react-router-dom';
+
 const Protocol = () => {
+    const { user } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Redirect if not logged in
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
+
+    // Redirect if not admin
+    if (user.role !== 'admin') {
+        return <Navigate to="/dashboard" replace />;
+    }
 
     const protocols = [
         {

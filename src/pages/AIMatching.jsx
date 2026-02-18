@@ -355,7 +355,7 @@ const AIMatching = () => {
                                                     <tr>
                                                         <th>Patient</th>
                                                         <th>Diagnosis</th>
-                                                        <th>AI Reasoning Summary</th>
+                                                        <th>Inclusion / Exclusion</th>
                                                         <th>Match Score</th>
                                                         <th>Status</th>
                                                     </tr>
@@ -383,11 +383,26 @@ const AIMatching = () => {
                                                                     <div style={{ fontSize: '0.75rem', color: '#adb5bd', marginTop: '2px' }}>Chronic onset &gt; 5yrs</div>
                                                                 </td>
                                                                 <td>
-                                                                    <p className="ai-reasoning">
-                                                                        {p.id === 'P-001' ? 'Strong match for CARDIO-2024. Age, BMI, and hypertension history fit all inclusion criteria. No exclusionary medications found.' :
-                                                                            p.id === 'P-002' ? 'Partial match. Fits stage II melanoma criteria but pending "Prior Surgery" confirmation. Lab results within range.' :
-                                                                                p.id === 'P-004' ? 'Excluded due to age > 70 and recent TIA event (exclusion #2). Kidney function GFR 28 is also below safety threshold.' : 'Analysis pending detailed review.'}
-                                                                    </p>
+                                                                    <div className="inclusion-exclusion-list">
+                                                                        {p.id === 'P-001' ? (
+                                                                            <div className="criteria-detail">
+                                                                                <div className="criteria-item"><span className="criteria-label">Inclusion:</span> Age 40-70, BMI 25-35, Hypertension History.</div>
+                                                                                <div className="criteria-item"><span className="criteria-label">Exclusion:</span> None (No exclusionary meds found).</div>
+                                                                            </div>
+                                                                        ) : p.id === 'P-002' ? (
+                                                                            <div className="criteria-detail">
+                                                                                <div className="criteria-item"><span className="criteria-label">Inclusion:</span> Stage II Melanoma, ECOG 0-1.</div>
+                                                                                <div className="criteria-item"><span className="criteria-label">Exclusion:</span> Prior Surgery (Status: Unconfirmed/Pending).</div>
+                                                                            </div>
+                                                                        ) : p.id === 'P-004' ? (
+                                                                            <div className="criteria-detail">
+                                                                                <div className="criteria-item"><span className="criteria-label">Inclusion:</span> None sufficient.</div>
+                                                                                <div className="criteria-item"><span className="criteria-label">Exclusion:</span> Age &gt; 70 (72), Recent TIA Event (&lt;6mo), GFR &lt; 30.</div>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <div className="criteria-detail">Analysis pending review.</div>
+                                                                        )}
+                                                                    </div>
                                                                 </td>
                                                                 <td>
                                                                     <div className="report-score">
