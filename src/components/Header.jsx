@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Bell, ChevronDown, X, ChevronRight, Menu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Header = ({ toggleSidebar }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
 
     const toggleProfile = () => {
@@ -11,9 +13,13 @@ const Header = ({ toggleSidebar }) => {
     };
 
     const handleLogout = () => {
-        // TODO: Clear auth state
+        logout();
         navigate('/login');
     };
+
+    // If user is not loaded yet, or if we want to show a skeleton, we could do it here.
+    // However, AuthProvider likely handles the initial loading state.
+    if (!user) return null;
 
     return (
         <header className="dashboard-header">
@@ -26,13 +32,12 @@ const Header = ({ toggleSidebar }) => {
                 </button>
                 <div className="user-profile" onClick={toggleProfile}>
                     <div className="user-info">
-                        <span className="user-name">Dr. Jon Kabir</span>
-                        <span className="user-role">Admin</span>
+                        <span className="user-name">{user.name}</span>
+                        <span className="user-role">{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</span>
                     </div>
-                    {/* Placeholder for avatar, or use an image if available */}
                     <img
-                        src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=200&h=200"
-                        alt="Dr. Jon Kabir"
+                        src={user.avatar}
+                        alt={user.name}
                         className="user-avatar"
                     />
                     <ChevronDown size={16} color="#adb5bd" />
@@ -45,13 +50,13 @@ const Header = ({ toggleSidebar }) => {
                         <div className="dropdown-header">
                             <div className="dropdown-user-info">
                                 <img
-                                    src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=200&h=200"
-                                    alt="Dr. Jon Kabir"
+                                    src={user.avatar}
+                                    alt={user.name}
                                     className="dropdown-avatar"
                                 />
                                 <div className="dropdown-user-details">
-                                    <span className="dropdown-name">Dr. Jon Kabir</span>
-                                    <span className="dropdown-role-badge">Admin</span>
+                                    <span className="dropdown-name">{user.name}</span>
+                                    <span className="dropdown-role-badge">{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</span>
                                 </div>
                             </div>
                             <button className="dropdown-close" onClick={() => setIsProfileOpen(false)}>

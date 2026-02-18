@@ -10,6 +10,7 @@ const AIMatching = () => {
     const [matchProgress, setMatchProgress] = useState(0);
     const [matchStage, setMatchStage] = useState('');
     const [isMatchComplete, setIsMatchComplete] = useState(false);
+    const [showReport, setShowReport] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const patients = [
@@ -95,6 +96,7 @@ const AIMatching = () => {
         setIsMatching(false);
         setMatchProgress(0);
         setIsMatchComplete(false);
+        setShowReport(false);
     };
 
     return (
@@ -212,8 +214,8 @@ const AIMatching = () => {
             {/* Run New Match Modal */}
             {isModalOpen && (
                 <div className="modal-overlay" onClick={isMatching ? null : resetModal}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        {!isMatching && !isMatchComplete && (
+                    <div className={`modal-content ${showReport ? 'modal-large' : ''}`} onClick={(e) => e.stopPropagation()}>
+                        {!isMatching && !isMatchComplete && !showReport && (
                             <>
                                 <div className="modal-header">
                                     <div className="modal-icon-wrapper">
@@ -281,7 +283,7 @@ const AIMatching = () => {
                             </div>
                         )}
 
-                        {isMatchComplete && (
+                        {isMatchComplete && !showReport && (
                             <div className="modal-complete-state">
                                 <div className="complete-icon-wrapper">
                                     <CheckCircle2 size={48} color="#2c3e50" strokeWidth={1.5} />
@@ -291,7 +293,182 @@ const AIMatching = () => {
 
                                 <div className="modal-footer center-footer">
                                     <button className="btn-cancel" onClick={resetModal}>Cancel</button>
-                                    <button className="btn-start" onClick={resetModal}>View Results</button>
+                                    <button className="btn-start" onClick={() => setShowReport(true)}>View Results</button>
+                                </div>
+                            </div>
+                        )}
+
+                        {showReport && (
+                            <div className="modal-report-state">
+                                <div className="report-header">
+                                    <div className="modal-title-group">
+                                        <h2>Match Analysis Report</h2>
+                                        <p>Comprehensive analysis for Protocol: <strong>CARDIO-2024</strong></p>
+                                    </div>
+                                    <div className="report-meta">
+                                        <span className="meta-tag" style={{ background: '#e9ecef', padding: '0.25rem 0.75rem', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600, color: '#495057', marginRight: '0.5rem' }}>12 Patients Analyzed</span>
+                                        <span className="meta-tag" style={{ background: '#e7f5ff', padding: '0.25rem 0.75rem', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600, color: '#1971c2' }}>Run ID: #AI-9024</span>
+                                    </div>
+                                </div>
+
+                                <div className="report-body">
+                                    {/* Summary Cards */}
+                                    <div className="report-summary-grid">
+                                        <div className="summary-card">
+                                            <span className="summary-value">12</span>
+                                            <span className="summary-label">Total Patients Analyzed</span>
+                                        </div>
+                                        <div className="summary-card">
+                                            <span className="summary-value" style={{ color: '#2b8a3e' }}>5</span>
+                                            <span className="summary-label">Eligible Candidates</span>
+                                        </div>
+                                        <div className="summary-card">
+                                            <span className="summary-value" style={{ color: '#e67700' }}>3</span>
+                                            <span className="summary-label">Partial Matches</span>
+                                        </div>
+                                        <div className="summary-card">
+                                            <span className="summary-value">84%</span>
+                                            <span className="summary-label">Avg. Match Confidence</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Distribution Chart */}
+                                    <div className="chart-section">
+                                        <h4 className="chart-title">Eligibility Distribution Analysis</h4>
+                                        <div className="distribution-chart">
+                                            <div className="chart-segment" style={{ width: '42%', background: '#b2f2bb', color: '#2b8a3e', fontSize: '0.8rem' }}>42% Eligible</div>
+                                            <div className="chart-segment" style={{ width: '25%', background: '#ffec99', color: '#e67700', fontSize: '0.8rem' }}>25% Partial</div>
+                                            <div className="chart-segment" style={{ width: '33%', background: '#ffc9c9', color: '#c92a2a', fontSize: '0.8rem' }}>33% Not Eligible</div>
+                                        </div>
+                                        <div className="chart-legend">
+                                            <div className="legend-item"><div className="legend-dot" style={{ background: '#b2f2bb' }}></div>High Confidence (&gt;80%)</div>
+                                            <div className="legend-item"><div className="legend-dot" style={{ background: '#ffec99' }}></div>Needs Review (50-80%)</div>
+                                            <div className="legend-item"><div className="legend-dot" style={{ background: '#ffc9c9' }}></div>Excluded (&lt;50%)</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Detailed Table */}
+                                    <div className="report-table-section">
+                                        <div className="report-table-container">
+                                            <table className="report-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Patient</th>
+                                                        <th>Diagnosis</th>
+                                                        <th>AI Reasoning Summary</th>
+                                                        <th>Match Score</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {/* Simulated Report Data */}
+                                                    {patients.map(p => (
+                                                        <React.Fragment key={p.id}>
+                                                            <tr>
+                                                                <td>
+                                                                    <div className="report-patient-info">
+                                                                        <img src={p.img} alt={p.name} className="report-avatar" />
+                                                                        <div>
+                                                                            <span style={{ display: 'block', fontWeight: 600, color: '#343a40' }}>{p.name}</span>
+                                                                            <span style={{ fontSize: '0.75rem', color: '#868e96' }}>{p.id}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div className="report-detail-text" style={{ fontWeight: 500, color: '#495057' }}>
+                                                                        {p.id === 'P-001' ? 'Hypertension, T2D' :
+                                                                            p.id === 'P-002' ? 'Melanoma Stage II' :
+                                                                                p.id === 'P-004' ? 'CAD' : 'N/A'}
+                                                                    </div>
+                                                                    <div style={{ fontSize: '0.75rem', color: '#adb5bd', marginTop: '2px' }}>Chronic onset &gt; 5yrs</div>
+                                                                </td>
+                                                                <td>
+                                                                    <p className="ai-reasoning">
+                                                                        {p.id === 'P-001' ? 'Strong match for CARDIO-2024. Age, BMI, and hypertension history fit all inclusion criteria. No exclusionary medications found.' :
+                                                                            p.id === 'P-002' ? 'Partial match. Fits stage II melanoma criteria but pending "Prior Surgery" confirmation. Lab results within range.' :
+                                                                                p.id === 'P-004' ? 'Excluded due to age > 70 and recent TIA event (exclusion #2). Kidney function GFR 28 is also below safety threshold.' : 'Analysis pending detailed review.'}
+                                                                    </p>
+                                                                </td>
+                                                                <td>
+                                                                    <div className="report-score">
+                                                                        <div className="report-score-bar">
+                                                                            <div className="report-score-fill" style={{ width: `${p.score}%`, backgroundColor: p.score > 80 ? '#2b8a3e' : p.score > 50 ? '#f08c00' : '#fa5252' }}></div>
+                                                                        </div>
+                                                                        <span style={{ fontWeight: 700, color: '#495057' }}>{p.score}%</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <span className={`eligibility-badge ${p.status === 'Eligible' ? 'badge-eligible' : p.status === 'Partially Eligible' ? 'badge-partial' : 'badge-not-eligible'}`}>
+                                                                        {p.status}
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        </React.Fragment>
+                                                    ))}
+                                                    {/* Additional Mock Rows for "Lots of details" feeling */}
+                                                    <tr>
+                                                        <td>
+                                                            <div className="report-patient-info">
+                                                                <div className="report-avatar-placeholder" style={{ background: '#e7f5ff', color: '#1971c2', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 600 }}>JA</div>
+                                                                <div>
+                                                                    <span style={{ display: 'block', fontWeight: 600, color: '#343a40' }}>James Alex</span>
+                                                                    <span style={{ fontSize: '0.75rem', color: '#868e96' }}>P-009</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className="report-detail-text" style={{ fontWeight: 500, color: '#495057' }}>Uncontrolled Hypertension</div>
+                                                        </td>
+                                                        <td>
+                                                            <p className="ai-reasoning">High potential match. BP readings consistently &gt;140/90. Medication washout period required before enrollment.</p>
+                                                        </td>
+                                                        <td>
+                                                            <div className="report-score">
+                                                                <div className="report-score-bar">
+                                                                    <div className="report-score-fill" style={{ width: '88%', backgroundColor: '#2b8a3e' }}></div>
+                                                                </div>
+                                                                <span style={{ fontWeight: 700, color: '#495057' }}>88%</span>
+                                                            </div>
+                                                        </td>
+                                                        <td><span className="eligibility-badge badge-eligible">Eligible</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <div className="report-patient-info">
+                                                                <div className="report-avatar-placeholder" style={{ background: '#fff0f6', color: '#c02a5c', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 600 }}>MR</div>
+                                                                <div>
+                                                                    <span style={{ display: 'block', fontWeight: 600, color: '#343a40' }}>Maria Rodriguez</span>
+                                                                    <span style={{ fontSize: '0.75rem', color: '#868e96' }}>P-012</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className="report-detail-text" style={{ fontWeight: 500, color: '#495057' }}>Lung Carcinoma</div>
+                                                        </td>
+                                                        <td>
+                                                            <p className="ai-reasoning">Excluded. Primary diagnosis does not match CARDIO-2024 scope. Referred to ONCO-TRIAL-B automatically.</p>
+                                                        </td>
+                                                        <td>
+                                                            <div className="report-score">
+                                                                <div className="report-score-bar">
+                                                                    <div className="report-score-fill" style={{ width: '15%', backgroundColor: '#fa5252' }}></div>
+                                                                </div>
+                                                                <span style={{ fontWeight: 700, color: '#495057' }}>15%</span>
+                                                            </div>
+                                                        </td>
+                                                        <td><span className="eligibility-badge badge-not-eligible">Not Eligible</span></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="modal-footer">
+                                    <button className="btn-cancel" onClick={resetModal} style={{ width: 'auto', padding: '0.75rem 2rem' }}>Close Report</button>
+                                    <button className="run-match-btn" onClick={() => { alert('Exporting PDF...') }} style={{ marginLeft: 'auto' }}>
+                                        Export PDF
+                                    </button>
                                 </div>
                             </div>
                         )}

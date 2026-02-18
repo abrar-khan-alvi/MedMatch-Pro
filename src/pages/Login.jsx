@@ -4,6 +4,7 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import SmallLogo from '../assets/SmallLogo.png';
 import '../styles/Login.css';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -11,7 +12,9 @@ const Login = () => {
         password: '',
     });
     const [rememberMe, setRememberMe] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,6 +22,7 @@ const Login = () => {
             ...prev,
             [name]: value,
         }));
+        setError(''); // Clear error on input
     };
 
     const handleRememberMeChange = (e) => {
@@ -27,9 +31,13 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Login submitted:', { ...formData, rememberMe });
-        // TODO: Connect to backend
-        navigate('/dashboard');
+        const result = login(formData.email, formData.password);
+
+        if (result.success) {
+            navigate('/dashboard');
+        } else {
+            setError(result.message);
+        }
     };
 
     return (
@@ -42,10 +50,11 @@ const Login = () => {
                 </div>
 
                 <form onSubmit={handleSubmit} className="login-form">
+                    {error && <div className="login-error-message">{error}</div>}
                     <Input
                         label="Email address"
                         type="email"
-                        placeholder="esteban_schiller@gmail.com"
+                        placeholder="admin@medmatch.com"
                         value={formData.email}
                         onChange={handleChange}
                         name="email"

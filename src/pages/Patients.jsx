@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+
+import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../layouts/DashboardLayout';
-import { Plus, Search, ChevronDown, ChevronLeft, ChevronRight, Upload, MoreVertical } from 'lucide-react';
+import { Plus, Search, ChevronDown, ChevronLeft, ChevronRight, Upload, MoreVertical, Eye, Trash2 } from 'lucide-react';
 import Button from '../components/Button';
 import UploadPatientDataModal from '../components/UploadPatientDataModal';
 import AddPatientModal from '../components/AddPatientModal';
@@ -8,9 +10,11 @@ import '../styles/Patients.css';
 import '../styles/Protocol.css'; // Reuse common styles
 
 const Patients = () => {
+    const navigate = useNavigate();
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
     const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [activeDropdown, setActiveDropdown] = useState(null);
     const itemsPerPage = 5;
 
     const patients = [
@@ -217,6 +221,29 @@ const Patients = () => {
         return '#e9ecef';
     };
 
+    const toggleDropdown = (id, e) => {
+        e.stopPropagation();
+        setActiveDropdown(activeDropdown === id ? null : id);
+    };
+
+    const handleViewDetails = (patient) => {
+        navigate(`/patients/${patient.id}`, { state: { patient } });
+        setActiveDropdown(null);
+    };
+
+    const handleDelete = (id) => {
+        console.log('Delete patient:', id);
+        alert(`Delete patient ${id}`);
+        setActiveDropdown(null);
+    };
+
+    // Close dropdown when clicking outside
+    React.useEffect(() => {
+        const handleClickOutside = () => setActiveDropdown(null);
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, []);
+
     return (
         <DashboardLayout>
             <div className="patients-container">
@@ -310,10 +337,20 @@ const Patients = () => {
                                             {patient.status}
                                         </span>
                                     </td>
-                                    <td data-label="">
-                                        <button className="action-btn">
+                                    <td className="action-cell" data-label="">
+                                        <button className="action-btn" onClick={(e) => toggleDropdown(patient.id, e)}>
                                             <MoreVertical size={16} />
                                         </button>
+                                        {activeDropdown === patient.id && (
+                                            <div className="action-menu" onClick={(e) => e.stopPropagation()}>
+                                                <button className="action-item" onClick={() => handleViewDetails(patient)}>
+                                                    <Eye size={16} /> View Details
+                                                </button>
+                                                <button className="action-item delete" onClick={() => handleDelete(patient.id)}>
+                                                    <Trash2 size={16} /> Delete
+                                                </button>
+                                            </div>
+                                        )}
                                     </td>
                                 </tr>
                             ))}

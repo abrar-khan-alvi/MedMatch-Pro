@@ -29,7 +29,8 @@
     border-radius: 12px;
     border: 1px solid #e9ecef;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    /* overflow: hidden; Removed to allow dropdowns to overflow */
 }
 
 .patients-table {
@@ -197,6 +198,62 @@
 
 .action-btn:hover {
     color: #495057;
+}
+
+.action-cell {
+    position: relative;
+}
+
+.action-menu {
+    position: absolute;
+    right: 1.5rem;
+    /* Align with right padding of cell */
+    top: 60%;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    min-width: 150px;
+    padding: 0.35rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Open upwards for the last 2 rows to prevent clipping at bottom of screen */
+.patients-table tr:last-child .action-menu,
+.patients-table tr:nth-last-child(2) .action-menu {
+    top: auto;
+    bottom: 60%;
+    transform-origin: bottom right;
+}
+
+.action-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #495057;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: left;
+}
+
+.action-item:hover {
+    background-color: #f8f9fa;
+}
+
+.action-item.delete {
+    color: #e03131;
+}
+
+.action-item.delete:hover {
+    background-color: #fff5f5;
 }
 
 /* Pagination */

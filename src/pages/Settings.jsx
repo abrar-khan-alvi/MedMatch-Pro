@@ -3,12 +3,14 @@ import { useSearchParams } from 'react-router-dom';
 import DashboardLayout from '../layouts/DashboardLayout';
 import { User, Bell, Shield, Database, Save } from 'lucide-react';
 import Button from '../components/Button';
+import { useAuth } from '../context/AuthContext';
 import '../styles/Settings.css';
 
 const Settings = () => {
     const [searchParams] = useSearchParams();
     const initialTab = searchParams.get('tab') || 'profile';
     const [activeTab, setActiveTab] = useState(initialTab);
+    const { user } = useAuth();
 
     const renderContent = () => {
         switch (activeTab) {
@@ -21,28 +23,44 @@ const Settings = () => {
                         <form>
                             <div className="settings-form-group">
                                 <label className="settings-label">Full Name</label>
-                                <input type="text" className="settings-input" defaultValue="Dr. John Smith" />
+                                <input
+                                    type="text"
+                                    className="settings-input"
+                                    defaultValue={user?.name || ''}
+                                />
                             </div>
 
                             <div className="settings-form-group">
                                 <label className="settings-label">Email Address</label>
-                                <input type="email" className="settings-input" defaultValue="dr.smith@hospital.com" />
+                                <input
+                                    type="email"
+                                    className="settings-input"
+                                    defaultValue={user?.email || ''}
+                                    disabled
+                                    style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
+                                />
                             </div>
 
                             <div className="settings-form-group">
                                 <label className="settings-label">Role</label>
                                 <div className="select-wrapper">
-                                    <select className="settings-input" defaultValue="All Protocol">
-                                        <option>All Protocol</option>
-                                        <option>Admin</option>
-                                        <option>Researcher</option>
-                                    </select>
+                                    <input
+                                        type="text"
+                                        className="settings-input"
+                                        defaultValue={user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : ''}
+                                        disabled
+                                        style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
+                                    />
                                 </div>
                             </div>
 
                             <div className="settings-form-group">
                                 <label className="settings-label">Department</label>
-                                <input type="text" className="settings-input" defaultValue="Clinical Research" />
+                                <input
+                                    type="text"
+                                    className="settings-input"
+                                    defaultValue={user?.department || ''}
+                                />
                             </div>
 
                             <div className="settings-actions">
@@ -209,6 +227,8 @@ const Settings = () => {
                 return null;
         }
     };
+
+    if (!user) return null; // Or wait for loading
 
     return (
         <DashboardLayout>
