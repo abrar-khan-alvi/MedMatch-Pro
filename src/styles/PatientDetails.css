@@ -407,6 +407,7 @@
     color: #868e96;
 }
 
+/* Responsive Design */
 @media (max-width: 1024px) {
     .details-grid {
         grid-template-columns: 1fr;
@@ -420,8 +421,8 @@
     }
 
     .profile-avatar {
-        width: 80px;
-        height: 80px;
+        width: 100px;
+        height: 100px;
         margin-bottom: 0;
     }
 
@@ -433,45 +434,53 @@
     }
 }
 
-/* Mobile Responsive Styles */
 @media (max-width: 768px) {
+
+    /* Header */
     .details-header-card {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1.25rem;
+        gap: 1rem;
+        padding: 1rem;
     }
 
     .header-left {
         width: 100%;
         flex-direction: column;
         align-items: flex-start;
-        gap: 1rem;
-    }
-
-    .back-btn {
-        width: fit-content;
-    }
-
-    .header-info {
-        width: 100%;
+        gap: 0.75rem;
     }
 
     .header-actions {
         width: 100%;
-        flex-direction: column;
-        gap: 0.75rem;
+        flex-direction: row;
+        /* Keep buttons side-by-side if possible */
+        gap: 0.5rem;
     }
 
     .header-actions button {
-        width: 100%;
+        flex: 1;
         justify-content: center;
     }
 
-    /* Revert profile card to column on very small screens if needed, 
-       or tweak the 1024px row style. Let's make it stack for cleaner view on mobile */
+    /* AI Summary */
+    .match-score-large {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        text-align: left;
+    }
+
+    .key-factors-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    /* Profile Card Revert to Stack */
     .profile-card {
         flex-direction: column;
         text-align: center;
+        gap: 1rem;
     }
 
     .profile-avatar {
@@ -482,17 +491,61 @@
     .status-section {
         margin-left: 0;
         width: 100%;
-        padding-top: 1.5rem;
+        padding-top: 1rem;
         border-top: 1px solid #e9ecef;
+        text-align: center;
+    }
+
+    .status-label {
+        text-align: center;
+    }
+
+    /* Evidence Table to Card View */
+    .evidence-table thead {
+        display: none;
+    }
+
+    .evidence-table,
+    .evidence-table tbody,
+    .evidence-table tr,
+    .evidence-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .evidence-table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 1rem;
+        background: #fff;
+    }
+
+    .evidence-table td {
+        padding: 0.5rem 0;
+        border: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        font-size: 0.9rem;
+    }
+
+    .evidence-table td::before {
+        content: attr(data-label);
+        /* Requires data-label in HTML */
+        font-weight: 600;
+        color: #868e96;
         text-align: left;
+        margin-right: 1rem;
     }
 
-    .info-grid {
-        grid-template-columns: 1fr;
+    .timeline-item {
+        gap: 1rem;
     }
 
-    .criteria-item {
-        flex-direction: column;
-        gap: 0.5rem;
+    .timeline-dot {
+        width: 28px;
+        height: 28px;
     }
 }

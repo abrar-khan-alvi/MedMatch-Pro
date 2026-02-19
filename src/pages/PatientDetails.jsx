@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../layouts/DashboardLayout';
-import { ArrowLeft, User, Activity, FileText, CheckCircle, XCircle, AlertCircle, Calendar, File, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, User, Activity, FileText, CheckCircle, XCircle, AlertCircle, Calendar, File, ExternalLink, ChevronDown, ChevronUp, Upload } from 'lucide-react';
 import Button from '../components/Button';
+import UploadPatientDataModal from '../components/UploadPatientDataModal';
 import '../styles/PatientDetails.css';
 
 const PatientDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
+    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
     const initialPatientData = location.state?.patient;
 
     // Enhanced Mock Data
@@ -83,6 +85,9 @@ const PatientDetails = () => {
                         </div>
                     </div>
                     <div className="header-actions">
+                        <Button variant="outline" className="gap-2" onClick={() => setIsUploadModalOpen(true)}>
+                            <Upload size={18} /> Upload
+                        </Button>
                         <Button variant="outline">Edit Patient</Button>
                         <Button variant="primary">Download Report</Button>
                     </div>
@@ -161,14 +166,14 @@ const PatientDetails = () => {
                                     <tbody>
                                         {patient.evidence.map(item => (
                                             <tr key={item.id}>
-                                                <td>{item.criterion}</td>
-                                                <td><strong>{item.value}</strong></td>
-                                                <td>
+                                                <td data-label="Criterion">{item.criterion}</td>
+                                                <td data-label="Extracted Value"><strong>{item.value}</strong></td>
+                                                <td data-label="Source Document">
                                                     <a href="#" className="source-tag">
                                                         <File size={12} /> {item.source}
                                                     </a>
                                                 </td>
-                                                <td>
+                                                <td data-label="Status">
                                                     {item.status === 'met' ?
                                                         <CheckCircle size={16} color="#2f9e44" /> :
                                                         <XCircle size={16} color="#fa5252" />
@@ -204,9 +209,11 @@ const PatientDetails = () => {
 
                         {/* Source Documents */}
                         <div className="info-card">
-                            <h3 className="card-title">
-                                <File size={20} className="text-gray-500" /> Source Documents
-                            </h3>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                <h3 className="card-title" style={{ marginBottom: 0 }}>
+                                    <File size={20} className="text-gray-500" /> Source Documents
+                                </h3>
+                            </div>
                             <div className="doc-list">
                                 {patient.documents.map((doc, i) => (
                                     <div className="doc-item" key={i}>
@@ -228,6 +235,7 @@ const PatientDetails = () => {
                     </div>
                 </div>
             </div>
+            <UploadPatientDataModal isOpen={isUploadModalOpen} onClose={() => setIsUploadModalOpen(false)} />
         </DashboardLayout>
     );
 };
