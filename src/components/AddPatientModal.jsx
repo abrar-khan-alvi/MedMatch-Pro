@@ -62,7 +62,15 @@ const AddPatientModal = ({ isOpen, onClose }) => {
                             </div>
                             <div className="form-group">
                                 <label>Protocol ID</label>
-                                <input type="text" className="form-input" placeholder="e.g., CARDIO-2024" />
+                                <div className="select-wrapper">
+                                    <select className="form-input">
+                                        <option value="">Select Protocol</option>
+                                        <option value="CARDIO-2024">CARDIO-2024</option>
+                                        <option value="DIABETES-PRO">DIABETES-PRO</option>
+                                        <option value="NEURO-STUDY">NEURO-STUDY</option>
+                                        <option value="ONCO-TRIAL-A">ONCO-TRIAL-A</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 

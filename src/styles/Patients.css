@@ -313,6 +313,15 @@
     color: #868e96;
 }
 
+.pagination-ellipsis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    font-size: 0.9rem;
+    color: #adb5bd;
+    user-select: none;
+}
 
 /* Responsive Styles */
 @media (max-width: 768px) {

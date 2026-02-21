@@ -1,40 +1,35 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../layouts/DashboardLayout';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import StatCard from '../components/StatCard';
 import { Users, UserCheck, AlertCircle, XCircle, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { PATIENTS, getDashboardStats } from '../data/patients';
 import '../styles/Dashboard.css';
 
 const Dashboard = () => {
+    const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
+    const s = getDashboardStats();
 
-    // Mock Data for Stats
+    // Stats derived from real patient data
     const stats = [
-        { title: 'Total Patients', value: '1,283', subtext: 'In Database', type: 'blue', icon: <Users size={18} /> },
-        { title: 'Eligible Patients', value: '847', subtext: 'Matched to criteria', type: 'yellow', icon: <UserCheck size={18} /> },
-        { title: 'Partially Eligible', value: '291', subtext: 'Awaiting clinician input', type: 'gray', icon: <AlertCircle size={18} /> },
-        { title: 'Not Eligible', value: '129', subtext: 'Not matching criteria', type: 'red', icon: <XCircle size={18} /> },
+        { title: 'Total Patients', value: String(s.total), subtext: 'In Database', type: 'blue', icon: <Users size={18} /> },
+        { title: 'Eligible Patients', value: String(s.eligible), subtext: 'Matched to criteria', type: 'yellow', icon: <UserCheck size={18} /> },
+        { title: 'Partially Eligible', value: String(s.partial), subtext: 'Awaiting clinician input', type: 'gray', icon: <AlertCircle size={18} /> },
+        { title: 'Not Eligible', value: String(s.notEligible), subtext: 'Not matching criteria', type: 'red', icon: <XCircle size={18} /> },
     ];
 
-    // Mock Data for Recent Matches
-    const recentMatches = [
-        { id: 'P-001', name: 'John Anderson', age: 45, condition: 'Hypertension', score: 95, status: 'Eligible', avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-002', name: 'Sarah Williams', age: 37, condition: 'Melanoma Stage II', score: 72, status: 'Partially Eligible', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-003', name: 'Michael Chen', age: 52, condition: 'Mild Cognitive Impairment', score: 95, status: 'Eligible', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-004', name: 'Emily Davis', age: 52, condition: 'Coronary Artery Disease', score: 35, status: 'Not Eligible', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-005', name: 'Robert Wilson', age: 55, condition: 'Type 2 Diabetes', score: 92, status: 'Eligible', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-006', name: 'Jennifer Martinez', age: 48, condition: 'Breast Cancer Stage I', score: 68, status: 'Partially Eligible', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-007', name: 'David Thompson', age: 67, condition: 'Atrial Fibrillation', score: 65, status: 'Partially Eligible', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-008', name: 'Lisa Rodriguez', age: 41, condition: 'Rheumatoid Arthritis', score: 88, status: 'Eligible', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-009', name: 'James Lee', age: 59, condition: 'Chronic Kidney Disease', score: 44, status: 'Not Eligible', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-010', name: 'Amanda Foster', age: 33, condition: 'Asthma', score: 78, status: 'Partially Eligible', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-011', name: 'William Garcia', age: 62, condition: 'Parkinson\'s Disease', score: 91, status: 'Eligible', avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-012', name: 'Rachel Kim', age: 29, condition: 'Multiple Sclerosis', score: 30, status: 'Not Eligible', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-013', name: 'Thomas Brown', age: 71, condition: 'Heart Failure', score: 56, status: 'Partially Eligible', avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-014', name: 'Sophia Patel', age: 44, condition: 'Lupus (SLE)', score: 83, status: 'Eligible', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=100&h=100' },
-        { id: 'P-015', name: 'Daniel Wright', age: 38, condition: 'Epilepsy', score: 97, status: 'Eligible', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=100&h=100' },
-    ];
+    // Recent matches from centralized patient data
+    const recentMatches = PATIENTS.map(p => ({
+        id: p.id,
+        name: p.name,
+        age: p.age,
+        condition: p.diagnosis,
+        score: p.score,
+        status: p.status,
+        avatar: p.avatar,
+    }));
 
     // Pagination logic
     const totalPages = Math.ceil(recentMatches.length / itemsPerPage);
@@ -83,8 +78,26 @@ const Dashboard = () => {
                             <h3>Recent Patient Matches</h3>
                             <p className="section-subtitle">Latest AI matching results</p>
                         </div>
-                        <Link to="/all-matches" className="view-all-link" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                            View all <ArrowRight size={16} />
+                        <Link
+                            to="/all-matches"
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.35rem',
+                                fontSize: '0.875rem',
+                                fontWeight: 600,
+                                color: '#2563eb',
+                                textDecoration: 'none',
+                                padding: '0.4rem 0.85rem',
+                                borderRadius: '8px',
+                                border: '1px solid #bfdbfe',
+                                background: '#eff6ff',
+                                transition: 'all 0.15s ease',
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#dbeafe'; e.currentTarget.style.borderColor = '#93c5fd'; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#eff6ff'; e.currentTarget.style.borderColor = '#bfdbfe'; }}
+                        >
+                            View All <ArrowRight size={15} />
                         </Link>
                     </div>
 

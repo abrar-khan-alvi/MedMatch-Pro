@@ -1,232 +1,293 @@
 import React, { useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../layouts/DashboardLayout';
-import { ArrowLeft, User, Activity, FileText, CheckCircle, XCircle, AlertCircle, Calendar, File, ExternalLink, ChevronDown, ChevronUp, Upload } from 'lucide-react';
+import {
+    ArrowLeft, User, Phone, Calendar, Activity, Pill,
+    FlaskConical, FileText, CheckCircle, XCircle, AlertCircle,
+    Clock, Stethoscope, ClipboardList, Upload, Download, ExternalLink
+} from 'lucide-react';
 import Button from '../components/Button';
 import UploadPatientDataModal from '../components/UploadPatientDataModal';
+import { PATIENTS } from '../data/patients';
 import '../styles/PatientDetails.css';
 
+/* ── build timeline events from patient data ── */
+const buildTimeline = (p) => {
+    const events = [];
+    if (p.dob) events.push({ date: 'Registered', label: 'Patient registered in system', type: 'info' });
+    events.push({ date: 'Diagnosis', label: `Confirmed: ${p.diagnosis}`, type: 'diagnosis' });
+    if (p.labValue && p.labValue !== 'Pending') {
+        events.push({ date: 'Lab Result', label: `${p.labParameter}: ${p.labValue}`, type: 'lab' });
+    }
+    if (p.medication) {
+        events.push({ date: 'Medication', label: `Assigned: ${p.medication}`, type: 'medication' });
+    }
+    events.push({ date: 'Protocol', label: `Enrolled in ${p.protocol}`, type: 'protocol' });
+    if (p.status === 'Eligible') events.push({ date: 'AI Match', label: 'Patient marked Eligible ✓', type: 'success' });
+    else if (p.status === 'Partially Eligible') events.push({ date: 'AI Match', label: 'Requires clinician review', type: 'warning' });
+    else if (p.status === 'Not Eligible') events.push({ date: 'AI Match', label: 'Not eligible for current protocol', type: 'error' });
+    else events.push({ date: 'Pending', label: 'Awaiting lab data for analysis', type: 'pending' });
+    return events;
+};
+
+/* ── build source documents from patient data ── */
+const buildDocuments = (p) => [
+    { name: `${p.name.replace(' ', '_')}_Medical_History.pdf`, type: 'PDF', size: '1.2 MB', date: 'Feb 2025', icon: '📄' },
+    { name: `Lab_Report_${p.labParameter || 'Results'}.xlsx`, type: 'XLSX', size: '340 KB', date: 'Jan 2025', icon: '🧪' },
+    { name: `Consent_Form_${p.protocol}.pdf`, type: 'PDF', size: '580 KB', date: 'Dec 2024', icon: '📋' },
+    { name: `AI_Match_Analysis_${p.id}.pdf`, type: 'PDF', size: '890 KB', date: 'Feb 2025', icon: '🤖' },
+];
+
+/* ── helpers ── */
+const statusClass = (s) => {
+    if (s === 'Eligible') return 'status-eligible';
+    if (s === 'Partially Eligible') return 'status-partial';
+    if (s === 'Not Eligible') return 'status-not-eligible';
+    return 'status-pending';
+};
+
+const scoreColor = (score) => {
+    if (score >= 80) return '#2b8a3e';
+    if (score >= 50) return '#f08c00';
+    return '#fa5252';
+};
+
+const InfoRow = ({ icon, label, value }) => (
+    <div className="pd-info-row">
+        <span className="pd-info-icon">{icon}</span>
+        <span className="pd-info-label">{label}</span>
+        <span className="pd-info-value">{value || '—'}</span>
+    </div>
+);
+
+/* ai reasoning lines per status */
+const buildReasoning = (p) => {
+    const inc = [], exc = [];
+    if (p.status === 'Eligible' || p.status === 'Partially Eligible') {
+        inc.push(`Diagnosis (${p.diagnosis}) aligns with protocol ${p.protocol} criteria.`);
+        if (p.labParameter && p.labValue && p.labValue !== 'Pending') {
+            inc.push(`Lab result ${p.labParameter}: ${p.labValue} is within acceptable range.`);
+        }
+        inc.push(`Current medication (${p.medication}) is compatible with trial requirements.`);
+    }
+    if (p.status === 'Partially Eligible') {
+        exc.push(`One or more secondary criteria require clinician review.`);
+        exc.push(`Lab value ${p.labParameter}: ${p.labValue} is borderline — manual confirmation needed.`);
+    }
+    if (p.status === 'Not Eligible') {
+        exc.push(`${p.diagnosis} does not meet primary inclusion criteria for ${p.protocol}.`);
+        exc.push(`Lab result ${p.labParameter}: ${p.labValue} falls outside the protocol's acceptable range.`);
+    }
+    if (p.status === 'Pending') {
+        exc.push(`Screening not yet completed — awaiting lab results.`);
+        exc.push(`AI analysis will run once all required data is available.`);
+    }
+    return { inc, exc };
+};
+
+/* evidence rows derived from patient fields */
+const buildEvidence = (p) => [
+    { criterion: 'Patient ID', value: p.id, status: 'met' },
+    { criterion: 'Date of Birth', value: p.dob || '—', status: 'met' },
+    { criterion: 'Gender', value: p.gender, status: 'met' },
+    { criterion: 'Primary Diagnosis', value: p.diagnosis, status: 'met' },
+    { criterion: `Lab: ${p.labParameter || 'N/A'}`, value: p.labValue || '—', status: p.labValue && p.labValue !== 'Pending' ? 'met' : 'missing' },
+    { criterion: 'Current Medication', value: p.medication, status: 'met' },
+    { criterion: 'Assigned Protocol', value: p.protocol, status: 'met' },
+    { criterion: 'AI Match Score', value: p.status === 'Pending' ? 'Pending' : `${p.score}%`, status: p.score >= 50 ? 'met' : 'unmet' },
+];
+
+/* ── component ── */
 const PatientDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-    const initialPatientData = location.state?.patient;
 
-    // Enhanced Mock Data
-    const patient = initialPatientData ? { ...initialPatientData, ...getMockDetails(initialPatientData.id) } : {
-        id: id,
-        name: 'John Anderson',
-        age: 45,
-        gender: 'Male',
-        diagnosis: 'Hypertension',
-        protocol: 'CARDIO-2024',
-        status: 'Eligible',
-        score: 95,
-        avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=100&h=100',
-        ...getMockDetails(id)
-    };
+    // Get patient: prefer navigation state, fall back to PATIENTS lookup
+    const passed = location.state?.patient;
+    const patient = passed
+        ? PATIENTS.find(p => p.id === passed.id) || passed
+        : PATIENTS.find(p => p.id === id) || { id, name: 'Unknown', status: 'Pending', score: 0, protocol: '—' };
 
-    function getMockDetails(patientId) {
-        return {
-            matchReasoning: {
-                inclusions: [
-                    "Age (45) falls within strict 18-65 range.",
-                    "Confirmed diagnosis of Hypertension (ICD-10 I10).",
-                    "No exclusionary comorbidities found."
-                ],
-                exclusions: [
-                    "BMI (28) is approaching the upper limit (30)."
-                ],
-                missingData: []
-            },
-            evidence: [
-                { id: 1, criterion: "Age 18-65", value: "45 Years", source: "Intake Form.pdf, Pg 1", status: "met" },
-                { id: 2, criterion: "Diagnosis: Hypertension", value: "Confirmed (I10)", source: "Referral Letter.pdf", status: "met" },
-                { id: 3, criterion: "Systolic BP > 140", value: "145 mmHg", source: "Vitals_Log_Jan.csv", status: "met" },
-                { id: 4, criterion: "No Diabetes Type 1", value: "Not detected", source: "History.pdf", status: "met" },
-                { id: 5, criterion: "Stable Meds > 3mo", value: "Lisinopril x 6mo", source: "Medication_List.pdf", status: "met" }
-            ],
-            timeline: [
-                { date: "2024-01-15", title: "Referral Received", desc: "Patient referred by Dr. Smith for Cardio Trial." },
-                { date: "2023-11-10", title: "Hypertension Diagnosis", desc: "Formal diagnosis confirmed via ambulatory BP monitoring." },
-                { date: "2023-08-22", title: "Initial Screening", desc: "Routine checkup flagged elevated BP (138/88)." }
-            ],
-            documents: [
-                { name: "Intake Form.pdf", date: "2024-01-15", type: "PDF" },
-                { name: "Referral Letter.pdf", date: "2024-01-15", type: "PDF" },
-                { name: "Vitals_Log_Jan.csv", date: "2024-01-10", type: "CSV" },
-                { name: "Medication_List.pdf", date: "2023-12-05", type: "PDF" }
-            ]
-        };
-    }
-
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'Eligible': return 'status-eligible';
-            case 'Partially Eligible': return 'status-partial';
-            case 'Not Eligible': return 'status-not-eligible';
-            default: return '';
-        }
-    };
+    const [isUploadOpen, setIsUploadOpen] = useState(false);
+    const { inc, exc } = buildReasoning(patient);
+    const evidence = buildEvidence(patient);
+    const timeline = buildTimeline(patient);
+    const documents = buildDocuments(patient);
+    const isPending = patient.status === 'Pending';
 
     return (
         <DashboardLayout>
             <div className="patient-details-container">
-                {/* Header */}
-                <div className="details-header-card">
-                    <div className="header-left">
-                        <button className="back-btn" onClick={() => navigate(-1)}>
-                            <ArrowLeft size={18} /> Back
+
+                {/* ── Top header bar ── */}
+                <div className="pd-topbar">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <button className="pd-back-btn" onClick={() => navigate(-1)}>
+                            <ArrowLeft size={16} /> Back
                         </button>
-                        <div className="header-info">
-                            <h1>Patient Details</h1>
-                            <span className="patient-id-tag">ID: {patient.id}</span>
-                        </div>
+                        <h1 className="pd-page-title">Patient Details</h1>
+                        <span className="pd-id-badge">{patient.id}</span>
                     </div>
-                    <div className="header-actions">
-                        <Button variant="outline" className="gap-2" onClick={() => setIsUploadModalOpen(true)}>
-                            <Upload size={18} /> Upload
+                    <div className="pd-topbar-actions">
+                        <Button variant="outline" onClick={() => setIsUploadOpen(true)}>
+                            <Upload size={16} /> Upload Data
                         </Button>
                         <Button variant="outline">Edit Patient</Button>
                         <Button variant="primary">Download Report</Button>
                     </div>
                 </div>
 
-                {/* AI Summary Section */}
-                <div className="ai-summary-section">
-                    <div className="match-score-large">
-                        <div className="score-circle-large" style={{ backgroundColor: patient.score > 80 ? '#2b8a3e' : patient.score > 50 ? '#f08c00' : '#fa5252' }}>
-                            {patient.score}%
-                        </div>
-                        <div>
-                            <h2 style={{ fontSize: '1.25rem', marginBottom: '0.25rem', color: '#212529' }}>AI Match Confidence</h2>
-                            <p style={{ color: '#495057' }}>Based on analysis of 12 clinical documents against protocol <strong>{patient.protocol}</strong></p>
-                        </div>
-                    </div>
+                {/* ── Two-column main layout ── */}
+                <div className="pd-main-grid">
 
-                    <div className="key-factors-grid">
-                        <div className="factor-column">
-                            <h4 style={{ color: '#2f9e44' }}><CheckCircle size={16} /> Key Inclusion Factors</h4>
-                            <ul className="factor-list">
-                                {patient.matchReasoning.inclusions.map((inc, i) => (
-                                    <li key={i}>{inc}</li>
-                                ))}
-                            </ul>
-                        </div>
-                        <div className="factor-column">
-                            <h4 style={{ color: '#f08c00' }}><AlertCircle size={16} /> Potential Risks / Exclusions</h4>
-                            <ul className="factor-list">
-                                {patient.matchReasoning.exclusions.map((exc, i) => (
-                                    <li key={i}>{exc}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                    {/* ══ LEFT COLUMN ══ */}
+                    <div className="pd-left-col">
 
-                <div className="details-grid">
-                    {/* Left Column: Profile */}
-                    <div className="profile-card">
-                        <img src={patient.avatar} alt={patient.name} className="profile-avatar" />
-                        <h2 className="profile-name">{patient.name}</h2>
-                        <p className="profile-meta">{patient.gender}, {patient.age} years</p>
+                        {/* Profile card */}
+                        <div className="pd-card pd-profile-card">
+                            <img src={patient.avatar} alt={patient.name} className="pd-avatar" />
+                            <h2 className="pd-patient-name">{patient.name}</h2>
+                            <p className="pd-patient-sub">{patient.gender}, {patient.age} yrs</p>
 
-                        <div className="status-section">
-                            <span className="status-label">Eligibility Status</span>
-                            <span className={`status-badge ${getStatusColor(patient.status)}`}>
-                                {patient.status}
-                            </span>
+                            {/* Score ring */}
+                            <div className="pd-score-ring" style={{ borderColor: isPending ? '#adb5bd' : scoreColor(patient.score) }}>
+                                <span className="pd-score-num" style={{ color: isPending ? '#adb5bd' : scoreColor(patient.score) }}>
+                                    {isPending ? '—' : `${patient.score}%`}
+                                </span>
+                                <span className="pd-score-label">AI Match Score</span>
+                            </div>
                         </div>
 
-                        <div className="status-section">
-                            <span className="status-label">Primary Diagnosis</span>
-                            <p style={{ fontWeight: 500, color: '#212529' }}>{patient.diagnosis}</p>
+                        {/* Demographics card */}
+                        <div className="pd-card">
+                            <h3 className="pd-card-title"><User size={16} /> Patient Information</h3>
+                            <InfoRow icon={<Calendar size={14} />} label="Date of Birth" value={patient.dob} />
+                            <InfoRow icon={<Phone size={14} />} label="Phone" value={patient.phone} />
+                            <InfoRow icon={<User size={14} />} label="Gender" value={patient.gender} />
+                            <InfoRow icon={<Clock size={14} />} label="Age" value={patient.age ? `${patient.age} years` : '—'} />
+                        </div>
+
+                        {/* Clinical card */}
+                        <div className="pd-card">
+                            <h3 className="pd-card-title"><Stethoscope size={16} /> Clinical Data</h3>
+                            <InfoRow icon={<ClipboardList size={14} />} label="Diagnosis" value={patient.diagnosis} />
+                            <InfoRow icon={<FlaskConical size={14} />} label={patient.labParameter || 'Lab Parameter'} value={patient.labValue} />
+                            <InfoRow icon={<Pill size={14} />} label="Medication" value={patient.medication} />
+                            <InfoRow icon={<Activity size={14} />} label="Protocol" value={patient.protocol} />
                         </div>
                     </div>
 
-                    {/* Right Column: Evidence Dashboard */}
-                    <div className="main-info-column">
+                    {/* ══ RIGHT COLUMN ══ */}
+                    <div className="pd-right-col">
 
-                        {/* Evidence Table */}
-                        <div className="info-card">
-                            <h3 className="card-title">
-                                <FileText size={20} className="text-blue-500" /> Evidence Breakdown
-                            </h3>
-                            <div className="table-responsive">
-                                <table className="evidence-table">
+                        {/* AI Analysis banner */}
+                        <div className="pd-card pd-ai-banner">
+                            <div className="pd-ai-header">
+                                <div>
+                                    <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#212529' }}>AI Match Analysis</h3>
+                                    <p style={{ margin: '0.25rem 0 0', color: '#6c757d', fontSize: '0.875rem' }}>
+                                        Protocol: <strong>{patient.protocol}</strong>
+                                    </p>
+                                </div>
+                                <span className={`status-badge ${statusClass(patient.status)}`}>{patient.status}</span>
+                            </div>
+
+                            <div className="pd-reasons-grid">
+                                {/* Inclusions */}
+                                <div className="pd-reason-col pd-reason-green">
+                                    <h4><CheckCircle size={15} /> Inclusion Factors</h4>
+                                    {inc.length > 0 ? (
+                                        <ul>{inc.map((s, i) => <li key={i}>{s}</li>)}</ul>
+                                    ) : (
+                                        <p className="pd-empty-reason">No inclusion factors — analysis pending.</p>
+                                    )}
+                                </div>
+                                {/* Exclusions */}
+                                <div className="pd-reason-col pd-reason-orange">
+                                    <h4><AlertCircle size={15} /> Risks / Exclusions</h4>
+                                    {exc.length > 0 ? (
+                                        <ul>{exc.map((s, i) => <li key={i}>{s}</li>)}</ul>
+                                    ) : (
+                                        <p className="pd-empty-reason">No exclusion flags found.</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Evidence table */}
+                        <div className="pd-card">
+                            <h3 className="pd-card-title"><FileText size={16} /> Evidence Breakdown</h3>
+                            <div className="pd-evidence-wrapper">
+                                <table className="pd-evidence-table">
                                     <thead>
                                         <tr>
                                             <th>Criterion</th>
-                                            <th>Extracted Value</th>
-                                            <th>Source Document</th>
-                                            <th>Status</th>
+                                            <th>Value from Record</th>
+                                            <th style={{ textAlign: 'center' }}>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {patient.evidence.map(item => (
-                                            <tr key={item.id}>
-                                                <td data-label="Criterion">{item.criterion}</td>
-                                                <td data-label="Extracted Value"><strong>{item.value}</strong></td>
-                                                <td data-label="Source Document">
-                                                    <a href="#" className="source-tag">
-                                                        <File size={12} /> {item.source}
-                                                    </a>
-                                                </td>
-                                                <td data-label="Status">
-                                                    {item.status === 'met' ?
-                                                        <CheckCircle size={16} color="#2f9e44" /> :
-                                                        <XCircle size={16} color="#fa5252" />
-                                                    }
+                                        {evidence.map((row, i) => (
+                                            <tr key={i}>
+                                                <td>{row.criterion}</td>
+                                                <td><strong>{row.value}</strong></td>
+                                                <td style={{ textAlign: 'center' }}>
+                                                    {row.status === 'met' && <CheckCircle size={16} color="#2f9e44" />}
+                                                    {row.status === 'unmet' && <XCircle size={16} color="#fa5252" />}
+                                                    {row.status === 'missing' && <AlertCircle size={16} color="#f08c00" />}
                                                 </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
+
+                            {/* Legend */}
+                            <div className="pd-legend">
+                                <span><CheckCircle size={13} color="#2f9e44" /> Met</span>
+                                <span><AlertCircle size={13} color="#f08c00" /> Needs Review</span>
+                                <span><XCircle size={13} color="#fa5252" /> Not Met</span>
+                            </div>
                         </div>
 
-                        {/* Clinical Timeline */}
-                        <div className="info-card">
-                            <h3 className="card-title">
-                                <Activity size={20} className="text-purple-500" /> Clinical Timeline
-                            </h3>
-                            <div className="timeline-container">
-                                {patient.timeline.map((event, i) => (
-                                    <div className="timeline-item" key={i}>
-                                        <div className="timeline-dot">
-                                            <Calendar size={14} color="#495057" />
+                        {/* ── Clinical Timeline ── */}
+                        <div className="pd-card">
+                            <h3 className="pd-card-title"><Clock size={16} /> Clinical Timeline</h3>
+                            <div className="pd-timeline">
+                                {timeline.map((event, i) => (
+                                    <div key={i} className="pd-timeline-row">
+                                        {/* left: connector */}
+                                        <div className="pd-tl-track">
+                                            <div className={`pd-tl-dot pd-dot-${event.type}`} />
+                                            {i < timeline.length - 1 && <div className="pd-tl-line" />}
                                         </div>
-                                        <div className="timeline-content">
-                                            <span className="timeline-date">{event.date}</span>
-                                            <h4 className="timeline-title">{event.title}</h4>
-                                            <p className="timeline-desc">{event.desc}</p>
+                                        {/* right: content */}
+                                        <div className="pd-tl-body">
+                                            <span className={`pd-tl-badge pd-badge-${event.type}`}>{event.date}</span>
+                                            <p className="pd-tl-label">{event.label}</p>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        {/* Source Documents */}
-                        <div className="info-card">
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                                <h3 className="card-title" style={{ marginBottom: 0 }}>
-                                    <File size={20} className="text-gray-500" /> Source Documents
-                                </h3>
-                            </div>
-                            <div className="doc-list">
-                                {patient.documents.map((doc, i) => (
-                                    <div className="doc-item" key={i}>
-                                        <div className="doc-info">
-                                            <FileText size={20} color="#6c757d" />
-                                            <div>
-                                                <div className="doc-name">{doc.name}</div>
-                                                <div className="doc-meta">{doc.type} • {doc.date}</div>
-                                            </div>
+                        {/* ── Source Documents ── */}
+                        <div className="pd-card">
+                            <div className="pd-documents-list">
+                                {documents.map((doc, i) => (
+                                    <div key={i} className="pd-document-row">
+                                        <span className="pd-doc-icon">{doc.icon}</span>
+                                        <div className="pd-doc-info">
+                                            <p className="pd-doc-name">{doc.name}</p>
+                                            <span className="pd-doc-meta">{doc.type} · {doc.size} · {doc.date}</span>
                                         </div>
-                                        <Button variant="outline" size="sm" style={{ padding: '0.25rem 0.5rem', fontSize: '0.8rem' }}>
-                                            View <ExternalLink size={12} style={{ marginLeft: 4 }} />
-                                        </Button>
+                                        <button className="pd-doc-action" title="Download">
+                                            <Download size={15} />
+                                        </button>
+                                        <button className="pd-doc-action" title="View">
+                                            <ExternalLink size={15} />
+                                        </button>
                                     </div>
                                 ))}
                             </div>
@@ -235,9 +296,10 @@ const PatientDetails = () => {
                     </div>
                 </div>
             </div>
-            <UploadPatientDataModal isOpen={isUploadModalOpen} onClose={() => setIsUploadModalOpen(false)} />
+            <UploadPatientDataModal isOpen={isUploadOpen} onClose={() => setIsUploadOpen(false)} />
         </DashboardLayout>
     );
 };
 
 export default PatientDetails;
+
