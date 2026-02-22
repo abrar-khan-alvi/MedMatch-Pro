@@ -48,6 +48,15 @@ const AllMatches = () => {
         if (page >= 1 && page <= totalPages) setCurrentPage(page);
     };
 
+    const getPageNumbers = () => {
+        const delta = 2;
+        const left = Math.max(1, currentPage - delta);
+        const right = Math.min(totalPages, currentPage + delta);
+        const pages = [];
+        for (let i = left; i <= right; i++) pages.push(i);
+        return { pages, showLeftEllipsis: left > 1, showRightEllipsis: right < totalPages };
+    };
+
     const getStatusClass = (status) => {
         switch (status) {
             case 'Eligible': return 'status-eligible';
@@ -102,7 +111,7 @@ const AllMatches = () => {
                             onChange={e => { setSearchTerm(e.target.value); setCurrentPage(1); }}
                         />
                     </div>
-                    <div className="filter-dropdowns" style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div className="filter-dropdowns am-filter-chips">
                         {statusOptions.map(opt => (
                             <button
                                 key={opt}
@@ -149,8 +158,8 @@ const AllMatches = () => {
                                         style={{ cursor: 'pointer' }}
                                         onClick={() => navigate(`/patients/${patient.id}`, { state: { patient: PATIENTS.find(p => p.id === patient.id) } })}
                                     >
-                                        <td className="col-id">{patient.id}</td>
-                                        <td>
+                                        <td className="col-id" data-label="ID">{patient.id}</td>
+                                        <td data-label="Patient">
                                             <div className="patient-info">
                                                 <img src={patient.avatar} alt={patient.name} className="patient-avatar" />
                                                 <div>
@@ -159,10 +168,10 @@ const AllMatches = () => {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>{patient.age} yrs</td>
-                                        <td className="col-diagnosis">{patient.condition}</td>
-                                        <td><span className="protocol-badge">{patient.protocol}</span></td>
-                                        <td>
+                                        <td data-label="Age">{patient.age} yrs</td>
+                                        <td className="col-diagnosis col-hide-mobile" data-label="Condition">{patient.condition}</td>
+                                        <td data-label="Protocol"><span className="protocol-badge">{patient.protocol}</span></td>
+                                        <td data-label="Score">
                                             {patient.status !== 'Pending' ? (
                                                 <div className="score-container">
                                                     <div className="score-bar">
@@ -177,7 +186,7 @@ const AllMatches = () => {
                                                 <span className="score-text">—</span>
                                             )}
                                         </td>
-                                        <td>
+                                        <td data-label="Status">
                                             <span className={`status-badge ${getStatusClass(patient.status)}`}>
                                                 {patient.status}
                                             </span>
@@ -185,6 +194,7 @@ const AllMatches = () => {
                                     </tr>
                                 ))
                             )}
+
                         </tbody>
                     </table>
                 </div>
@@ -197,26 +207,51 @@ const AllMatches = () => {
                     <div className="pagination-controls">
                         <button
                             className="pagination-btn pagination-nav"
+                            onClick={() => goToPage(1)}
+                            disabled={currentPage === 1}
+                            title="First page"
+                        >
+                            «
+                        </button>
+                        <button
+                            className="pagination-btn pagination-nav"
                             onClick={() => goToPage(currentPage - 1)}
                             disabled={currentPage === 1}
                         >
                             <ChevronLeft size={16} />
                         </button>
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                            <button
-                                key={page}
-                                className={`pagination-btn pagination-page ${currentPage === page ? 'active' : ''}`}
-                                onClick={() => goToPage(page)}
-                            >
-                                {page}
-                            </button>
-                        ))}
+                        {(() => {
+                            const { pages, showLeftEllipsis, showRightEllipsis } = getPageNumbers();
+                            return (
+                                <>
+                                    {showLeftEllipsis && <span className="pagination-ellipsis">…</span>}
+                                    {pages.map(page => (
+                                        <button
+                                            key={page}
+                                            className={`pagination-btn pagination-page ${currentPage === page ? 'active' : ''}`}
+                                            onClick={() => goToPage(page)}
+                                        >
+                                            {page}
+                                        </button>
+                                    ))}
+                                    {showRightEllipsis && <span className="pagination-ellipsis">…</span>}
+                                </>
+                            );
+                        })()}
                         <button
                             className="pagination-btn pagination-nav"
                             onClick={() => goToPage(currentPage + 1)}
                             disabled={currentPage === totalPages || totalPages === 0}
                         >
                             <ChevronRight size={16} />
+                        </button>
+                        <button
+                            className="pagination-btn pagination-nav"
+                            onClick={() => goToPage(totalPages)}
+                            disabled={currentPage === totalPages || totalPages === 0}
+                            title="Last page"
+                        >
+                            »
                         </button>
                     </div>
                 </div>

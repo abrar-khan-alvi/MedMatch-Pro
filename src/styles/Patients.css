@@ -65,6 +65,11 @@
     color: #868e96;
 }
 
+/* Hide on mobile — column whose data already appears elsewhere in card mode */
+.col-hide-mobile {
+    color: #495057;
+}
+
 .patient-info {
     display: flex;
     align-items: center;
@@ -275,6 +280,8 @@
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .pagination-btn {
@@ -438,6 +445,11 @@
         color: #adb5bd;
     }
 
+    /* Hide the standalone Condition column on mobile — it already shows in the avatar sub-line */
+    .patients-table td.col-hide-mobile {
+        display: none;
+    }
+
     /* Score container adjustments */
     .score-container {
         width: auto;
@@ -480,5 +492,29 @@
         width: 32px;
         height: 32px;
         font-size: 0.8rem;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 400px) {
+    .pagination-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+
+    .pagination-info {
+        font-size: 0.78rem;
+    }
+
+    .header-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .upload-btn,
+    .add-patient-btn {
+        width: 100%;
+        justify-content: center;
     }
 }

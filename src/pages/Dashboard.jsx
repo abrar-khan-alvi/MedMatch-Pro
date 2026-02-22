@@ -44,11 +44,12 @@ const Dashboard = () => {
     };
 
     const getPageNumbers = () => {
+        const delta = 2;
+        const left = Math.max(1, currentPage - delta);
+        const right = Math.min(totalPages, currentPage + delta);
         const pages = [];
-        for (let i = 1; i <= totalPages; i++) {
-            pages.push(i);
-        }
-        return pages;
+        for (let i = left; i <= right; i++) pages.push(i);
+        return { pages, showLeftEllipsis: left > 1, showRightEllipsis: right < totalPages };
     };
 
     const getStatusClass = (status) => {
@@ -138,26 +139,51 @@ const Dashboard = () => {
                         <div className="pagination-controls">
                             <button
                                 className="pagination-btn pagination-nav"
+                                onClick={() => goToPage(1)}
+                                disabled={currentPage === 1}
+                                title="First page"
+                            >
+                                «
+                            </button>
+                            <button
+                                className="pagination-btn pagination-nav"
                                 onClick={() => goToPage(currentPage - 1)}
                                 disabled={currentPage === 1}
                             >
                                 <ChevronLeft size={16} />
                             </button>
-                            {getPageNumbers().map((page) => (
-                                <button
-                                    key={page}
-                                    className={`pagination-btn pagination-page ${currentPage === page ? 'active' : ''}`}
-                                    onClick={() => goToPage(page)}
-                                >
-                                    {page}
-                                </button>
-                            ))}
+                            {(() => {
+                                const { pages, showLeftEllipsis, showRightEllipsis } = getPageNumbers();
+                                return (
+                                    <>
+                                        {showLeftEllipsis && <span className="pagination-ellipsis">…</span>}
+                                        {pages.map((page) => (
+                                            <button
+                                                key={page}
+                                                className={`pagination-btn pagination-page ${currentPage === page ? 'active' : ''}`}
+                                                onClick={() => goToPage(page)}
+                                            >
+                                                {page}
+                                            </button>
+                                        ))}
+                                        {showRightEllipsis && <span className="pagination-ellipsis">…</span>}
+                                    </>
+                                );
+                            })()}
                             <button
                                 className="pagination-btn pagination-nav"
                                 onClick={() => goToPage(currentPage + 1)}
                                 disabled={currentPage === totalPages}
                             >
                                 <ChevronRight size={16} />
+                            </button>
+                            <button
+                                className="pagination-btn pagination-nav"
+                                onClick={() => goToPage(totalPages)}
+                                disabled={currentPage === totalPages || totalPages === 0}
+                                title="Last page"
+                            >
+                                »
                             </button>
                         </div>
                     </div>
