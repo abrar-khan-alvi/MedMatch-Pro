@@ -644,12 +644,20 @@ select.form-input::-ms-expand {
 
     .filter-dropdowns {
         width: 100%;
-        overflow-x: auto;
-        padding-bottom: 0.5rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    /* AllMatches chip-style filters */
+    .am-filter-chips {
+        flex-wrap: wrap;
+        gap: 0.4rem;
     }
 
     .filter-btn {
         white-space: nowrap;
+        font-size: 0.82rem;
+        padding: 0.55rem 0.75rem;
     }
 
     .options-grid {
@@ -664,5 +672,35 @@ select.form-input::-ms-expand {
     .form-row {
         flex-direction: column;
         gap: 0;
+    }
+}
+
+/* ── AllMatches-specific base styles ── */
+.am-filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* ── AllMatches header back-button area: stack on small screens ── */
+@media (max-width: 600px) {
+    .protocol-header .page-title {
+        font-size: 1.15rem;
+    }
+
+    .protocol-header .page-subtitle {
+        font-size: 0.82rem;
+    }
+
+    .am-filter-chips .filter-btn {
+        font-size: 0.78rem;
+        padding: 0.45rem 0.65rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .am-filter-chips .filter-btn {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.55rem;
     }
 }

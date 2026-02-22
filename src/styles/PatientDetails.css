@@ -15,6 +15,7 @@
     gap: 0.75rem;
     margin-bottom: 1.25rem;
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .pd-back-btn {
@@ -74,15 +75,199 @@
     grid-template-columns: 220px 1fr;
     gap: 1.25rem;
     align-items: start;
+    min-width: 0;
 }
 
+/* Prevent grid children from overflowing their cell */
+.pd-left-col,
+.pd-right-col {
+    min-width: 0;
+}
+
+/* ── Prevent horizontal overflow at container level ── */
+.patient-details-container {
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+/* ═══════════════════════════════
+   TABLET  ≤ 820px
+═══════════════════════════════ */
 @media (max-width: 820px) {
+
+    .patient-details-container {
+        padding: 1rem;
+    }
+
+    /* Stack left + right columns */
     .pd-main-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Profile card goes horizontal: avatar | name/sub | score ring */
+    .pd-profile-card {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        text-align: left;
+    }
+
+    .pd-score-ring {
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+    .pd-patient-sub {
+        margin-bottom: 0;
+    }
+
+    /* AI banner header: wrap so status badge drops below on narrow viewports */
+    .pd-ai-header {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    /* Reasons side-by-side still fits on tablet */
+    .pd-reasons-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ═══════════════════════════════
+   MOBILE  ≤ 640px
+═══════════════════════════════ */
+@media (max-width: 640px) {
+
     .patient-details-container {
-        padding: 1rem;
+        padding: 0.75rem;
+    }
+
+    /* Topbar: stack vertically so actions don't clip */
+    .pd-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+    }
+
+    .pd-topbar>div:first-child {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .pd-topbar-actions {
+        margin-left: 0;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+
+    .pd-topbar-actions>* {
+        flex: 1 1 auto;
+        min-width: 90px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .pd-page-title {
+        font-size: 1.05rem;
+    }
+
+    /* Profile card: vertical on phone */
+    .pd-profile-card {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+    }
+
+    .pd-score-ring {
+        margin: 0 auto;
+    }
+
+    /* AI banner: status badge wraps below title */
+    .pd-ai-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* Reasons stacked vertically */
+    .pd-reasons-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Info rows: tighter label */
+    .pd-info-label {
+        min-width: 55px;
+        font-size: 0.78rem;
+    }
+
+    .pd-info-value {
+        font-size: 0.78rem;
+    }
+
+    /* Card padding */
+    .pd-card {
+        padding: 0.75rem 0.85rem;
+    }
+
+    /* Evidence table: compact */
+    .pd-evidence-table th,
+    .pd-evidence-table td {
+        padding: 0.45rem 0.5rem;
+        font-size: 0.78rem;
+    }
+
+    /* Legend wraps */
+    .pd-legend {
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        font-size: 0.75rem;
+    }
+
+    /* Document rows: tighter */
+    .pd-doc-name {
+        font-size: 0.78rem;
+    }
+
+    .pd-doc-meta {
+        font-size: 0.68rem;
+    }
+
+    .pd-card-title {
+        font-size: 0.82rem;
+    }
+}
+
+/* ═══════════════════════════════
+   SMALL PHONES  ≤ 400px
+═══════════════════════════════ */
+@media (max-width: 400px) {
+
+    .pd-card {
+        padding: 0.6rem 0.7rem;
+    }
+
+    .pd-evidence-table th,
+    .pd-evidence-table td {
+        padding: 0.35rem 0.35rem;
+        font-size: 0.72rem;
+    }
+
+    .pd-avatar {
+        width: 52px;
+        height: 52px;
+    }
+
+    .pd-score-ring {
+        width: 64px;
+        height: 64px;
+    }
+
+    .pd-score-num {
+        font-size: 0.95rem;
     }
 }
 
