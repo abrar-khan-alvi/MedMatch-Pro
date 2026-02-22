@@ -402,6 +402,8 @@
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .matches-pagination .pagination-btn {
@@ -438,6 +440,16 @@
 
 .matches-pagination .pagination-nav {
     color: #868e96;
+}
+
+.matches-pagination .pagination-ellipsis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    font-size: 0.9rem;
+    color: #adb5bd;
+    user-select: none;
 }
 
 /* Profile Dropdown */
@@ -796,5 +808,22 @@
         width: 32px;
         height: 32px;
         font-size: 0.8rem;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 400px) {
+    .matches-pagination .pagination-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+
+    .matches-pagination .pagination-info {
+        font-size: 0.78rem;
+    }
+
+    .recent-matches-section {
+        padding: 0.75rem;
     }
 }
